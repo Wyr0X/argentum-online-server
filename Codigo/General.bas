@@ -1165,7 +1165,7 @@ Public Sub EfectoInvisibilidad(ByVal UserIndex As Integer)
         
     With UserList(UserIndex)
         If .Counters.Invisibilidad > 0 Then
-            .Counters.Invisibilidad = UserList(UserIndex).Counters.Invisibilidad - 1
+            .Counters.Invisibilidad = .Counters.Invisibilidad - 1
             If .Counters.DisabledInvisibility > 0 Then
                 .Counters.DisabledInvisibility = .Counters.DisabledInvisibility - 1
                 If .Counters.DisabledInvisibility = 0 And .Counters.Invisibilidad > 0 Then
