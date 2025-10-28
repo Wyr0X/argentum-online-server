@@ -590,8 +590,8 @@ Private Function PuedeLanzar(ByVal UserIndex As Integer, ByVal HechizoIndex As I
             End If
 
 104         If UserList(UserIndex).flags.EnConsulta Then
-'Msg778= No puedes lanzar hechizos si estas en consulta.
-Call WriteLocaleMsg(UserIndex, "778", e_FontTypeNames.FONTTYPE_INFO)
+                'Msg778= No puedes lanzar hechizos si estas en consulta.
+                Call WriteLocaleMsg(UserIndex, "778", e_FontTypeNames.FONTTYPE_INFO)
                 Exit Function
             End If
             
@@ -1595,8 +1595,8 @@ Sub LanzarHechizo(ByVal Index As Integer, ByVal UserIndex As Integer)
 116                         Call WriteLocaleMsg(UserIndex, "8", e_FontTypeNames.FONTTYPE_INFO)
                         End If
                     Else
-'Msg790= Este hechizo actua solo sobre usuarios.
-Call WriteLocaleMsg(UserIndex, "790", e_FontTypeNames.FONTTYPE_INFO)
+                        'Msg790= Este hechizo actua solo sobre usuarios.
+                        Call WriteLocaleMsg(UserIndex, "790", e_FontTypeNames.FONTTYPE_INFO)
                     End If
         
 120             Case e_TargetType.uNPC
@@ -1609,8 +1609,8 @@ Call WriteLocaleMsg(UserIndex, "790", e_FontTypeNames.FONTTYPE_INFO)
 132                         Call WriteLocaleMsg(UserIndex, "8", e_FontTypeNames.FONTTYPE_INFO)
                         End If
                     Else
-'Msg791= Este hechizo solo afecta a los npcs.
-Call WriteLocaleMsg(UserIndex, "791", e_FontTypeNames.FONTTYPE_INFO)
+                        'Msg791= Este hechizo solo afecta a los npcs.
+                        Call WriteLocaleMsg(UserIndex, "791", e_FontTypeNames.FONTTYPE_INFO)
                     End If
         
 136             Case e_TargetType.uUsuariosYnpc
@@ -1631,9 +1631,11 @@ Call WriteLocaleMsg(UserIndex, "791", e_FontTypeNames.FONTTYPE_INFO)
                         Else
 160                         Call WriteLocaleMsg(UserIndex, "8", e_FontTypeNames.FONTTYPE_INFO)
                         End If
+                    ElseIf IsCastle(UserList(UserIndex).flags.TargetMap, UserList(UserIndex).flags.TargetX, UserList(UserIndex).flags.TargetY) Then
+                        Call UserMagicAttackCastle(UserIndex, uh, UserList(UserIndex).flags.TargetX, UserList(UserIndex).flags.TargetY)
                     Else
-'Msg792= Target invalido.
-Call WriteLocaleMsg(UserIndex, "792", e_FontTypeNames.FONTTYPE_INFO)
+                        'Msg792= Target invalido.
+                        Call WriteLocaleMsg(UserIndex, "792", e_FontTypeNames.FONTTYPE_INFO)
                     End If
         
 164             Case e_TargetType.uTerreno

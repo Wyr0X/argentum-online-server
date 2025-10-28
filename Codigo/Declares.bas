@@ -37,6 +37,7 @@ Public Enum e_AccionBarra
     Intermundia = 3
     GoToPareja = 5
     Hogar = 6
+    GoCastle = 7
     CancelarAccion = 99
 End Enum
 
@@ -136,6 +137,7 @@ Public Enum e_DeleteSource
     eClearInvasion
     eAiResetNpc
     eClearHunt
+    eBuildCastle
 End Enum
 
 Public lstUsuariosDonadores() As String
@@ -364,7 +366,7 @@ Public Const EspadaMataDragonesIndex As Integer = 402
 Public Const CommonLuteIndex         As Integer = 3986
 Public Const MagicLuteIndex          As Integer = 469
 Public Const ElvenLuteIndex          As Integer = 41
-Public Const FireEcoIndex            As String = "Eco √çgneo (NPC)"
+Public Const FireEcoIndex            As String = "Eco √ùgneo (NPC)"
 Public Const MauveFlashIndex         As String = "Destello Malva (NPC)"
 
 
@@ -446,6 +448,9 @@ Public Enum e_Trigger
     VALIDOPUENTE = 17
     NADOCOMBINADO = 18
     CARCEL = 19
+    CASTLE = 200        ' Using big numbers to avoid collisions with roof triggers
+    CASTLE_CENTER = 201
+    CASTLE_EXIT = 202
 End Enum
 
 ''
@@ -662,7 +667,7 @@ Public Enum e_Block
     SOUTH = &H4
     WEST = &H8
     ALL_SIDES = &HF
-    GM = &H10
+    DYNAMIC = &H10
 
 End Enum
 
@@ -871,6 +876,7 @@ Public Enum e_OBJType
     otFishingPool = 52
     otUsableOntarget = 53
     otPlantas = 54
+    otCastlePermit = 55
     otCualquiera = 100
 End Enum
 
@@ -944,6 +950,7 @@ Public Enum e_UssableOnTarget
     eTrap
     eArpon
     eHandCannon
+    eCastlePermit
 End Enum
 'Estadisticas
 Public Const STAT_MAXELV              As Byte = 47
@@ -1495,13 +1502,13 @@ Public Type t_SalaReto
     CaenItems As Boolean
     TiempoRestante As Long
     TiempoItems As Integer
-    Tama√±oEquipoIzq As Byte
-    Tama√±oEquipoDer As Byte
+    TamaÒoEquipoIzq As Byte
+    TamaÒoEquipoDer As Byte
     Jugadores() As t_UserReference
 End Type
 
 Public Type t_Retos
-    Tama√±oMaximoEquipo As Byte
+    TamaÒoMaximoEquipo As Byte
     ApuestaMinima As Long
     ImpuestoApuesta As Single
     DuracionMaxima As Long
@@ -2222,6 +2229,7 @@ Public Type t_UserCounters
     TimerBarra As Integer
     LastResetTick As Long
     LastTransferGold As Long
+    WarpCastleCooldown As Integer
     
 End Type
 
@@ -2594,6 +2602,7 @@ Public Type t_NPCFlags
     BehaviorFlags As Long 'Use with e_BehaviorFlags mask
     AIAlineacion As e_Alineacion
     Team As Byte
+    CastleNPC As Boolean
 End Type
 
 Public Type t_CriaturasEntrenador

@@ -339,6 +339,7 @@ Sub ResetNpcFlags(ByVal NpcIndex As Integer)
 144         .Snd2 = 0
 146         .Snd3 = 0
 148         .TierraInvalida = 0
+149         .CastleNPC = False
 150         Call ResetMask(.BehaviorFlags)
 152         Call SetMask(.BehaviorFlags, e_BehaviorFlags.eAttackNpc Or e_BehaviorFlags.eAttackUsers)
 154         .AIAlineacion = e_Alineacion.ninguna
@@ -1478,6 +1479,7 @@ Function OpenNPC(ByVal NpcNumber As Integer, _
 312         .flags.RespawnOrigPos = val(Leer.GetValue("NPC" & NpcNumber, "OrigPos"))
 314         .flags.AfectaParalisis = val(Leer.GetValue("NPC" & NpcNumber, "AfectaParalisis"))
 316         .flags.GolpeExacto = val(Leer.GetValue("NPC" & NpcNumber, "GolpeExacto"))
+317         .flags.CastleNPC = val(Leer.GetValue("NPC" & NpcNumber, "CastleNPC")) <> 0
             If val(Leer.GetValue("NPC" & NpcNumber, "TranslationInmune")) > 0 Then Call SetMask(.flags.EffectInmunity, e_Inmunities.eTranslation)
     
 318         .flags.Snd1 = val(Leer.GetValue("NPC" & NpcNumber, "Snd1"))
@@ -2244,6 +2246,12 @@ Public Function CanAttackUser(ByVal NpcIndex As Integer, ByVal UserIndex As Inte
         If .flags.Team <> 0 Then
             If .flags.Team = UserList(UserIndex).flags.CurrentTeam Then
                 CanAttackUser = eSameTeam
+                Exit Function
+            End If
+        End If
+        If .flags.CastleNPC Then
+            If Not CastleNpcCanAttack(UserIndex, .pos.Map) Then
+                CanAttackUser = eSameGuild
                 Exit Function
             End If
         End If

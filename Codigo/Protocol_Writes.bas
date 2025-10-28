@@ -5930,3 +5930,68 @@ WriteUpdateLobbyList_Err:
     Call Writer.Clear
     Call TraceError(Err.Number, Err.Description, "Argentum20Server.Protocol_Writes.PrepareActiveToggles", Erl)
 End Sub
+
+Public Sub WriteCastleBuildPosition(ByVal UserIndex As Integer, ByVal X As Integer, ByVal Y As Integer, _
+    ByVal GrhIndex As Long, ByVal GrhOffsetX As Integer, ByVal GrhOffsetY As Integer, ByVal Width As Integer, ByVal Height As Integer)
+    
+    On Error GoTo WriteCastleBuildPosition_Err
+    
+    Call Writer.WriteInt16(ServerPacketID.eCastleBuildPosition)
+
+    Call Writer.WriteInt16(X)
+    Call Writer.WriteInt16(Y)
+    Call Writer.WriteInt32(GrhIndex)
+    Call Writer.WriteInt16(GrhOffsetX)
+    Call Writer.WriteInt16(GrhOffsetY)
+    Call Writer.WriteInt8(Width)
+    Call Writer.WriteInt8(Height)
+
+    Call modSendData.SendData(ToIndex, UserIndex)
+    
+    Exit Sub
+WriteCastleBuildPosition_Err:
+    Call Writer.Clear
+    Call TraceError(Err.Number, Err.Description, "Argentum20Server.Protocol_Writes.WriteCastleBuildPosition", Erl)
+End Sub
+
+Public Function PrepareMessage_ShowCastle(ByVal CastleId As Byte)
+        
+        On Error GoTo PrepareMessage_ShowCastle_Err
+        
+100     Call Writer.WriteInt16(ServerPacketID.eShowCastle)
+        Call WriteCastleData(Writer, CastleId)
+        
+        Exit Function
+PrepareMessage_ShowCastle_Err:
+        Call Writer.Clear
+        Call TraceError(Err.Number, Err.Description, "Argentum20Server.Protocol_Writes.PrepareMessage_ShowCastle", Erl)
+        
+End Function
+
+Public Function PrepareMessage_ShowCastleInside(ByVal CastleId As Byte)
+        
+        On Error GoTo PrepareMessage_ShowCastleInside_Err
+        
+100     Call Writer.WriteInt16(ServerPacketID.eShowCastleInside)
+        Call WriteCastleInsideData(Writer, CastleId)
+        
+        Exit Function
+PrepareMessage_ShowCastleInside_Err:
+        Call Writer.Clear
+        Call TraceError(Err.Number, Err.Description, "Argentum20Server.Protocol_Writes.PrepareMessage_ShowCastleInside", Erl)
+        
+End Function
+
+Public Function PrepareMessage_UpdateCastleHP(ByVal HP As Byte)
+        
+        On Error GoTo PrepareMessage_UpdateCastleHP_Err
+        
+100     Call Writer.WriteInt16(ServerPacketID.eUpdateCastleHP)
+102     Call Writer.WriteInt8(HP)
+        
+        Exit Function
+PrepareMessage_UpdateCastleHP_Err:
+        Call Writer.Clear
+        Call TraceError(Err.Number, Err.Description, "Argentum20Server.Protocol_Writes.PrepareMessage_UpdateCastleHP", Erl)
+        
+End Function

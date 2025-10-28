@@ -115,7 +115,7 @@ End Sub
 
 Sub BlockAndInform(ByVal Map As Integer, ByVal X As Integer, ByVal Y As Integer, ByVal NewState As Integer)
 100    If NewState Then
-110        MapData(Map, X, Y).Blocked = e_Block.ALL_SIDES Or e_Block.GM
+110        MapData(Map, X, Y).Blocked = e_Block.ALL_SIDES Or e_Block.DYNAMIC
        Else
 120        MapData(Map, X, Y).Blocked = 0
        End If
@@ -673,6 +673,8 @@ On Error GoTo Handler
 246     frmCargando.Label1(2).Caption = "Cargando Quests"
 252     Call LoadQuests
 
+254     frmCargando.Label1(2).Caption = "Cargando Castillos"
+256     Call LoadCastlesData
    
         Call ResetLastLogoutAndIsLogged
 
@@ -1816,6 +1818,8 @@ Sub PasarSegundo()
 168                         Select Case .Accion.TipoAccion
                                 Case e_AccionBarra.Hogar
 170                                 Call HomeArrival(i)
+172                             Case e_AccionBarra.GoCastle
+                                    Call WarpToCastle(i)
                             End Select
                             
 182                         .Accion.Particula = 0
@@ -1905,6 +1909,11 @@ Sub PasarSegundo()
 280                         Call CancelarSubasta
                         End If
                     End If
+                    
+                    ' Castle Warp Cooldown
+                    If .Counters.WarpCastleCooldown > 0 Then
+                        .Counters.WarpCastleCooldown = .Counters.WarpCastleCooldown - 1
+                    End If
         
                     'Cerrar usuario
 282                 If .Counters.Saliendo Then
@@ -1958,6 +1967,9 @@ Sub PasarSegundo()
             
             End With
         Next
+        
+        ' Castles
+        Call UpdateCastlesTimer
 
 
         Exit Sub

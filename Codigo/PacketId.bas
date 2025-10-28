@@ -204,6 +204,10 @@ Public Enum ServerPacketID
     eAntiCheatMessage
     eAntiCheatStartSession
     eReportLobbyList
+    eCastleBuildPosition
+    eShowCastle
+    eShowCastleInside
+    eUpdateCastleHP
 #If PYMMO = 0 Then
     eAccountCharacterList
 #End If
@@ -537,6 +541,7 @@ Public Enum ClientPacketID
     eUseHKeySlot
     eAntiCheatMessage
     eRequestLobbyList
+    eWarpToCastle
     #If PYMMO = 0 Then
     eCreateAccount
     eLoginAccount

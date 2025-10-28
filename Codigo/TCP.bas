@@ -1146,6 +1146,7 @@ Sub ResetContadores(ByVal UserIndex As Integer)
             .timeChat = 0
             .timeFx = 0
             .timeGuildChat = 0
+            .WarpCastleCooldown = 0
         End With
 
         

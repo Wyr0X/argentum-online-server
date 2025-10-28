@@ -914,6 +914,8 @@ On Error Resume Next
             Call HandleAntiCheatMessage(UserIndex)
         Case ClientPacketID.eFactionMessage
             Call HandleFactionMessage(UserIndex)
+        Case ClientPacketID.eWarpToCastle
+            Call HandleWarpToCastle(UserIndex)
 #If PYMMO = 0 Then
         Case ClientPacketID.eCreateAccount
             Call HandleCreateAccount(ConnectionId)
@@ -2979,6 +2981,31 @@ Private Sub HandleWorkLeftClick(ByVal UserIndex As Integer)
 240                             consumirMunicion = False
                             End If
                         End If
+                    ElseIf IsCastle(.pos.Map, X, Y) Then
+                        If Abs(X - .pos.X) > RANGO_VISION_X Or Abs(Y - .pos.Y) > RANGO_VISION_Y Then
+                            ' Msg8=Estas demasiado lejos.
+                            Call WriteLocaleMsg(UserIndex, "8", e_FontTypeNames.FONTTYPE_INFO)
+                            Call WriteWorkRequestTarget(UserIndex, 0)
+                            Exit Sub
+                        End If
+                        
+                        If .flags.invisible > 0 Then
+                            If IsFeatureEnabled("remove-inv-on-attack") Then
+                                Call RemoveUserInvisibility(UserIndex)
+                            End If
+                        End If
+
+                        If Not UserPhysicalAttackCastle(UserIndex, X, Y) Then Exit Sub
+                        
+                        If ProjectileType > 0 And (.flags.Oculto = 0 Or Not MapInfo(.pos.Map).KeepInviOnAttack) Then
+                            Call SendData(SendTarget.ToPCAliveArea, UserIndex, PrepareCreateProjectile(.pos.X, .pos.Y, X, Y, ProjectileType))
+                        End If
+                        'Si no es GM invisible, le envio el movimiento del arma.
+                        If UserList(UserIndex).flags.AdminInvisible = 0 Then
+                            Call SendData(SendTarget.ToPCAliveArea, UserIndex, PrepareMessageArmaMov(.Char.charindex, 1))
+                        End If
+                        
+                        consumirMunicion = True
                     End If
                     
 242                 With .Invent
@@ -10518,4 +10545,12 @@ On Error GoTo HendleRequestLobbyList_Err:
     Exit Sub
 HendleRequestLobbyList_Err:
     Call TraceError(Err.Number, Err.Description, "Protocol.HendleRequestLobbyList", Erl)
+End Sub
+
+Public Sub HandleWarpToCastle(ByVal UserIndex As Integer)
+On Error GoTo HandleeWarpToCastle_Err:
+    Call StartWarpToCastle(UserIndex)
+    Exit Sub
+HandleeWarpToCastle_Err:
+    Call TraceError(Err.Number, Err.Description, "Protocol.HandleeWarpToCastle", Erl)
 End Sub

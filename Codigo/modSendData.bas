@@ -66,6 +66,7 @@ Public Enum SendTarget
     ToPCAreaButFollowerAndIndex
     ToGroup
     ToGroupButIndex
+    ToCastleArea
 End Enum
 
 Public Sub SendToConnection(ByVal ConnectionId, Optional Args As Variant)
@@ -299,6 +300,8 @@ On Error GoTo SendData_Err
                 Call SendToGroup(sndIndex, Buffer)
             Case SendTarget.ToGroupButIndex
                 Call SendToGroupButIndex(sndIndex, Buffer)
+            Case SendTarget.ToCastleArea
+                Call SendToCastleArea(sndIndex, Buffer)
         End Select
 
 SendData_Err:
@@ -1203,4 +1206,53 @@ On Error GoTo SendToGroupButIndex_Err
         Exit Sub
 SendToGroupButIndex_Err:
     Call TraceError(Err.Number, Err.Description, "modSendData.SendToGroupButIndex", Erl)
+End Sub
+
+#If DIRECT_PLAY = 0 Then
+Private Sub SendToCastleArea(ByVal CastleSndIndex As Integer, ByVal Buffer As Network.Writer)
+#Else
+Private Sub SendToCastleArea(ByVal CastleSndIndex As Integer, ByVal Buffer As clsNetWriter)
+#End If
+        
+        On Error GoTo SendToCastleArea_Err
+
+        Dim LoopC     As Long
+        Dim tempIndex As Integer
+        Dim Map       As Integer
+        Dim AreaX     As Integer
+        Dim AreaY     As Integer
+        
+102     Call GetCastleArea(CastleSndIndex, Map, AreaX, AreaY)
+    
+108     If Not MapaValido(Map) Then Exit Sub
+    
+110     For LoopC = 1 To ConnGroups(Map).CountEntrys
+112         tempIndex = ConnGroups(Map).UserEntrys(LoopC)
+
+114         If UserList(tempIndex).AreasInfo.AreaReciveX And AreaX Then  'Esta en el area?
+116             If UserList(tempIndex).AreasInfo.AreaReciveY And AreaY Then
+
+118                 If UserList(tempIndex).ConnectionDetails.ConnIDValida Then
+
+                        If IsValidUserRef(UserList(tempIndex).flags.GMMeSigue) Then
+                            Call modNetwork.Send(UserList(tempIndex).flags.GMMeSigue.ArrayIndex, Buffer)
+                        End If
+                        
+                        Call modNetwork.Send(tempIndex, Buffer)
+
+                    End If
+
+                End If
+
+            End If
+
+122     Next LoopC
+
+        
+        Exit Sub
+
+SendToCastleArea_Err:
+124     Call TraceError(Err.Number, Err.Description, "modSendData.SendToCastleArea", Erl)
+
+        
 End Sub

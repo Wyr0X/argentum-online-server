@@ -26,6 +26,14 @@ Begin VB.Form frmMain
    ScaleHeight     =   6255
    ScaleWidth      =   8595
    StartUpPosition =   2  'CenterScreen
+   Begin VB.CommandButton cmdReloadCastles 
+      Caption         =   "Recargar Castillos"
+      Height          =   495
+      Left            =   6840
+      TabIndex        =   41
+      Top             =   720
+      Width           =   1695
+   End
    Begin VB.Timer TimerBarco 
       Enabled         =   0   'False
       Interval        =   12000
@@ -877,7 +885,7 @@ On Error GoTo Handler
     For i = 1 To UBound(Invasiones)
         With Invasiones(i)
             ' Aumentamos el contador para controlar cuando
-            ' inicia la invasiÃ³n o cuando debe terminar
+            ' inicia la invasión o cuando debe terminar
             .TimerInvasion = .TimerInvasion + 1
 
             If .Activa Then
@@ -2183,5 +2191,10 @@ Private Sub UptimeTimer_Timer()
     Exit Sub
 UptimeTimer_Timer_Err:
     Call TraceError(Err.Number, Err.Description, "frmMain.UptimeTimer_Timer", Erl)
+End Sub
+
+Private Sub cmdReloadCastles_Click()
+    Call LoadCastlesData
+    Call AgregarAConsola("Servidor > Castillos recargados.")
 End Sub
 

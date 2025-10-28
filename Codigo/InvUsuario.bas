@@ -3237,6 +3237,8 @@ Sub UseInvItem(ByVal UserIndex As Integer, ByVal Slot As Byte, ByVal ByClick As 
                  Case e_OBJType.otUsableOntarget
                     .flags.UsingItemSlot = .flags.TargetObjInvSlot
                     Call WriteWorkRequestTarget(UserIndex, e_Skill.TargetableItem)
+                Case e_OBJType.otCastlePermit
+                    Call UseCastlePermit(UserIndex, obj)
                 End Select
              End With
 
@@ -3570,6 +3572,8 @@ On Error GoTo UserTargetableItem_Err
                     Call UseArpon(UserIndex)
                 Case e_UssableOnTarget.eHandCannon
                     Call UseHandCannon(UserIndex, TileX, TileY)
+                Case e_UssableOnTarget.eCastlePermit
+                    Call BuildCastle(UserIndex, TileX, TileY)
             End Select
         End With
         .flags.UsingItemSlot = 0

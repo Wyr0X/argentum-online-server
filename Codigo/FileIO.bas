@@ -17,7 +17,7 @@ Attribute VB_Name = "ES"
 '    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '
 '    This program was based on Argentum Online 0.11.6
-'    Copyright (C) 2002 MÃ¡rquez Pablo Ignacio
+'    Copyright (C) 2002 Márquez Pablo Ignacio
 '
 '    Argentum Online is based on Baronsoft's VB6 Online RPG
 '    You can contact the original creator of ORE at aaron@baronsoft.com
@@ -645,10 +645,10 @@ Public Sub CargarHechizos()
         '#               ATENCION PELIGRO                  #
         '###################################################
         '
-        '  Â¡Â¡Â¡Â¡ NO USAR GetVar PARA LEER Hechizos.dat !!!!
+        '  ¡¡¡¡ NO USAR GetVar PARA LEER Hechizos.dat !!!!
         '
-        'El que ose desafiar esta LEY, se las tendrÃ¡ que ver
-        'con migo. Para leer Hechizos.dat se deberÃ¡ usar
+        'El que ose desafiar esta LEY, se las tendrá que ver
+        'con migo. Para leer Hechizos.dat se deberá usar
         'la nueva clase clsLeerInis.
         '
         'Alejo
@@ -1115,7 +1115,7 @@ Sub LoadBalance()
 167     RangoVidas = val(BalanceIni.GetValue("EXTRA", "RangoVidas"))
 168     CapVidaMax = val(BalanceIni.GetValue("EXTRA", "CapVidaMax"))
 169     CapVidaMin = val(BalanceIni.GetValue("EXTRA", "CapVidaMin"))
-170     ModDaÃ±oGolpeCritico = val(BalanceIni.GetValue("EXTRA", "ModDaÃ±oGolpeCritico"))
+170     ModDañoGolpeCritico = val(BalanceIni.GetValue("EXTRA", "ModDañoGolpeCritico"))
 171     RequiredSpellDisplayTime = val(BalanceIni.GetValue("EXTRA", "RequiredSpellDisplayTime"))
 172     MaxInvisibleSpellDisplayTime = val(BalanceIni.GetValue("EXTRA", "MaxInvisibleSpellDisplayTime"))
         MultiShotReduction = val(BalanceIni.GetValue("EXTRA", "MultiShotReduction"))
@@ -1142,7 +1142,7 @@ Sub LoadBalance()
     
 176     Set BalanceIni = Nothing
     
-178     AgregarAConsola "Se cargÃ³ el balance (Balance.dat)"
+178     AgregarAConsola "Se cargó el balance (Balance.dat)"
 
         
         Exit Sub
@@ -1249,10 +1249,10 @@ Sub LoadOBJData()
         '#               ATENCION PELIGRO                  #
         '###################################################
         '
-        'Â¡Â¡Â¡Â¡ NO USAR GetVar PARA LEER DESDE EL OBJ.DAT !!!!
+        '¡¡¡¡ NO USAR GetVar PARA LEER DESDE EL OBJ.DAT !!!!
         '
-        'El que ose desafiar esta LEY, se las tendrÃ¡ que ver
-        'con migo. Para leer desde el OBJ.DAT se deberÃ¡ usar
+        'El que ose desafiar esta LEY, se las tendrá que ver
+        'con migo. Para leer desde el OBJ.DAT se deberá usar
         'la nueva clase clsLeerInis.
         '
         'Alejo
@@ -1566,6 +1566,10 @@ Sub LoadOBJData()
 434                     .LingoteIndex = val(Leer.GetValue(ObjKey, "LingoteIndex"))
                     Case e_OBJType.otUsableOntarget
                         .EfectoMagico = val(Leer.GetValue(ObjKey, "efectomagico"))
+
+                    Case e_OBJType.otCastlePermit
+                        ' Use this random attribute to avoid creating more
+                        .cdType = val(Leer.GetValue(ObjKey, "CastleType"))
                 End Select
 424             .MagicDamageBonus = val(Leer.GetValue(ObjKey, "MagicDamageBonus"))
 425             .MagicAbsoluteBonus = val(Leer.GetValue(ObjKey, "MagicAbsoluteBonus"))
@@ -1672,7 +1676,7 @@ Sub LoadOBJData()
 536             .Agarrable = val(Leer.GetValue(ObjKey, "Agarrable"))
 538             .ForoID = Leer.GetValue(ObjKey, "ID")
     
-                'CHECK: !!! Esto es provisorio hasta que los de Dateo cambien los valores de string a numerico  -  Nunca mÃ¡s papu
+                'CHECK: !!! Esto es provisorio hasta que los de Dateo cambien los valores de string a numerico  -  Nunca más papu
                 Dim n As Integer
                 Dim s As String
 
@@ -2148,7 +2152,7 @@ Public Sub CargarMapaFormatoCSM(ByVal map As Long, ByVal MAPFl As String)
 296                         NpcList(npcIndex).pos.map = map
 298                         NpcList(npcIndex).pos.x = NPCs(i).x
 300                         NpcList(npcIndex).pos.y = NPCs(i).y
-                            '  guardo siempre la pos original... puede sernos Ãºtil ;)
+                            '  guardo siempre la pos original... puede sernos útil ;)
 302                         NpcList(npcIndex).Orig = NpcList(npcIndex).pos
     
 304                         If LenB(NpcList(npcIndex).Name) = 0 Then
@@ -2158,7 +2162,7 @@ Public Sub CargarMapaFormatoCSM(ByVal map As Long, ByVal MAPFl As String)
                             End If
                         Else
                             ' Lo guardo en los logs + aparece en el Debug.Print
-310                         Call TraceError(404, "NPC no existe en los .DAT's o estÃ¡ mal dateado. Posicion: " & Map & "-" & NPCs(i).x & "-" & NPCs(i).y, "ES.CargarMapaFormatoCSM")
+310                         Call TraceError(404, "NPC no existe en los .DAT's o está mal dateado. Posicion: " & Map & "-" & NPCs(i).x & "-" & NPCs(i).y, "ES.CargarMapaFormatoCSM")
                         End If
                     End If
 312             Next i
@@ -2286,7 +2290,7 @@ Sub LoadSini()
 100     If frmMain.Visible Then frmMain.txStatus.Caption = "Cargando info de inicio del server."
     
         If Not FileExist(IniPath & "Server.ini", vbArchive) Then
-            MsgBox "Se requiere de la configuraciÃ³n en Server.ini", vbCritical + vbOKOnly
+            MsgBox "Se requiere de la configuración en Server.ini", vbCritical + vbOKOnly
             End
         End If
 
@@ -3272,7 +3276,7 @@ Public Sub LoadPesca()
         Dim Count As Long, CountEspecial As Long, i As Long, j As Long, str As String, Field() As String, nivel As Integer, MaxLvlCania As Long
 
 110     Count = val(IniFile.GetValue("PECES", "NumPeces"))
-112     MaxLvlCania = val(IniFile.GetValue("PECES", "MaxlvlcaÃ±a"))
+112     MaxLvlCania = val(IniFile.GetValue("PECES", "Maxlvlcaña"))
         CountEspecial = 1
 114     ReDim PesoPeces(0 To MaxLvlCania) As Long
 
@@ -3294,7 +3298,7 @@ Public Sub LoadPesca()
                     ReDim Preserve PecesEspeciales(1 To CountEspecial) As t_Obj
                     PecesEspeciales(CountEspecial).objIndex = val(Field(0))
                     PecesEspeciales(CountEspecial).Data = val(Field(1))
-                    nivel = val(Field(2))               ' Nivel de caÃ±a
+                    nivel = val(Field(2))               ' Nivel de caña
                     
                     If (nivel > MaxLvlCania) Then nivel = MaxLvlCania
                     
@@ -3303,14 +3307,14 @@ Public Sub LoadPesca()
                 End If
 126             Peces(i).objIndex = val(Field(0))
 128             Peces(i).Data = val(Field(1))       ' Peso
-130             nivel = val(Field(2))               ' Nivel de caÃ±a
+130             nivel = val(Field(2))               ' Nivel de caña
 
 132             If (nivel > MaxLvlCania) Then nivel = MaxLvlCania
 134             Peces(i).amount = nivel
                 
             Next
 
-            ' Los ordeno segun nivel de caÃ±a (quick sort)
+            ' Los ordeno segun nivel de caña (quick sort)
 136         Call QuickSortPeces(1, Count)
 
             ' Sumo los pesos
@@ -3461,7 +3465,7 @@ Public Sub LoadRangosFaccion()
 112             ReDim RangosFaccion(1 To MaxRangoFaccion * 2) As t_RangoFaccion
 
 114             For i = 1 To MaxRangoFaccion
-                    '<N>Rango=<NivelRequerido>-<AsesinatosRequeridos>-<TÃ­tulo>
+                    '<N>Rango=<NivelRequerido>-<AsesinatosRequeridos>-<Título>
 116                 rankData = Split(IniFile.GetValue("ArmadaReal", i & "Rango"), "-", , vbTextCompare)
 118                 RangosFaccion(2 * i - 1).rank = i
 120                 RangosFaccion(2 * i - 1).Titulo = rankData(2)
@@ -3601,7 +3605,7 @@ Public Function GetElapsedTime() As Single
 
         '***********************************************************************
         'Author: Wyrox
-        'Obenemos el tiempo (en milisegundos) que pasÃ³ desde la ultima llamada.
+        'Obenemos el tiempo (en milisegundos) que pasó desde la ultima llamada.
         '***********************************************************************
     
         Dim end_time As Currency

@@ -834,6 +834,15 @@ Sub Accion(ByVal UserIndex As Integer, ByVal Map As Integer, ByVal X As Integer,
 388                     Call AccionParaPuerta(Map, X, Y + 1, UserIndex)
 
                 End Select
+            
+            ' Castle door (check center and to both sides - in case of odd width castle)
+            ElseIf MapData(Map, X, Y).trigger = e_Trigger.CASTLE_CENTER Or _
+                   MapData(Map, X + 1, Y).trigger = e_Trigger.CASTLE_CENTER Or _
+                   MapData(Map, X - 1, Y).trigger = e_Trigger.CASTLE_CENTER Then
+                Call TryOpenCastleGate(UserIndex, Map, True)
+            ' Castle exit
+            ElseIf MapData(Map, X, Y).trigger = e_Trigger.CASTLE_EXIT Then
+                Call TryOpenCastleGate(UserIndex, Map, False)
             End If
 
         End If

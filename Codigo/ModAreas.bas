@@ -60,7 +60,7 @@ Public Const USER_NUEVO               As Byte = 255
 Private Const AREA_DIM                As Byte = 12
  
 'Cuidado:
-' ¬°¬°¬°LAS AREAS EST√ÅN HARDCODEADAS!!!
+' °°°LAS AREAS EST¡N HARDCODEADAS!!!
 Private CurDay                        As Byte
 
 Private CurHour                       As Byte
@@ -273,8 +273,13 @@ Public Sub CheckUpdateNeededUser(ByVal UserIndex As Integer, ByVal head As Byte,
                         Call WriteUpdateTrapState(UserIndex, 1, X, Y)
                     End If
                     ' Bloqueo GM
-228                 If (MapData(Map, X, Y).Blocked And e_Block.GM) <> 0 Then
+228                 If (MapData(Map, X, Y).Blocked And e_Block.DYNAMIC) <> 0 Then
 230                     Call Bloquear(False, UserIndex, X, Y, e_Block.ALL_SIDES)
+                    End If
+                    
+                    ' Castle
+                    If MapData(Map, X, Y).trigger = e_Trigger.CASTLE_CENTER Then
+                        Call SendCastleToUser(UserIndex, Map)
                     End If
                     
 232             Next Y
@@ -591,4 +596,15 @@ Public Sub RemoveNpc(ByVal NpcIndex As Integer)
         End If
     End With
     
+End Sub
+
+Public Sub GetAreaByPos(ByVal x As Integer, ByVal y As Integer, ByRef AreaX As Integer, ByRef AreaY As Integer)
+    On Error GoTo GetAreaByPos_Err
+
+100     AreaX = 2 ^ (x \ AREA_DIM)
+102     AreaY = 2 ^ (y \ AREA_DIM)
+
+    Exit Sub
+GetAreaByPos_Err:
+    Call TraceError(Err.Number, Err.Description, "ModAreas.GetAreaByPos", Erl)
 End Sub

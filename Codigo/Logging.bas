@@ -61,6 +61,7 @@ Private Declare Function ReportEvent _
     e_LogPremios = 17
     e_LogDatabaseError = 18
     e_LogSecurity = 19
+    e_LogCastles = 20
  End Enum
 Private Type t_CircularBuffer
     currentIndex As Integer
@@ -251,6 +252,13 @@ End Sub
 Public Sub LogSecurity(str As String)
 On Error GoTo ErrHandler
         Call LogThis(type_log.e_LogSecurity, "[Cheating.log] " & str, vbLogEventTypeWarning)
+        Exit Sub
+ErrHandler:
+End Sub
+
+Public Sub LogCastles(ByVal str As String)
+On Error GoTo ErrHandler
+        Call LogThis(type_log.e_LogCastles, "[Castles.log] " & str, vbLogEventTypeInformation)
         Exit Sub
 ErrHandler:
 End Sub

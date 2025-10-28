@@ -776,6 +776,9 @@ On Error GoTo Complete_ConnectUser_Err
 1090                ' Msg521=Tu estado no te permite entrar al clan.
                     Call WriteLocaleMsg(UserIndex, "521", e_FontTypeNames.FONTTYPE_GUILD)
                  End If
+                 
+                ' Castle warp cooldown
+                .Counters.WarpCastleCooldown = CastleWarpCooldown
 
              End If
 
@@ -826,7 +829,9 @@ On Error GoTo Complete_ConnectUser_Err
 1215        If EventoActivo Then
 1220            Call WriteLocaleMsg(UserIndex, 1625, e_FontTypeNames.FONTTYPE_New_Eventos, PublicidadEvento & "¬" & TiempoRestanteEvento) 'Msg1625=¬1. Tiempo restante: ¬2 minuto(s).
              End If
-        
+
+            Call CheckConnectInsideCastle(UserIndex)
+
 1225        Call WriteContadores(UserIndex)
 1227        Call WritePrivilegios(UserIndex)
             Call RestoreDCUserCache(UserIndex)
@@ -1119,8 +1124,11 @@ Sub RefreshCharStatus(ByVal UserIndex As Integer)
             End If
             
         End If
-    
-120     Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageUpdateTagAndStatus(UserIndex, UserList(UserIndex).Faccion.Status, name))
+
+        Dim Status As Byte: Status = GetCastleStatus(UserIndex)
+        If Status = 0 Then Status = UserList(UserIndex).Faccion.Status
+
+120     Call SendData(SendTarget.ToPCArea, UserIndex, PrepareMessageUpdateTagAndStatus(UserIndex, Status, Name))
 
         
         Exit Sub
@@ -1196,12 +1204,13 @@ Sub MakeUserChar(ByVal toMap As Boolean, _
 138                         TempName = .NameMimetizado
                         End If
                     End If
-                    
 
-                                    
+                    Dim Status As Byte: Status = GetCastleStatus(UserIndex)
+                    If Status = 0 Then Status = .Faccion.Status
+
 140                 Call WriteCharacterCreate(sndIndex, _
                                     .Char.body, .Char.head, .Char.Heading, .Char.charindex, x, y, .Char.WeaponAnim, .Char.ShieldAnim, .Char.CartAnim, _
-                                    .Char.FX, 999, .Char.CascoAnim, TempName, .Faccion.Status, .flags.Privilegios, .Char.ParticulaFx, _
+                                    .Char.FX, 999, .Char.CascoAnim, TempName, Status, .flags.Privilegios, .Char.ParticulaFx, _
                                     .Char.Head_Aura, .Char.Arma_Aura, .Char.Body_Aura, .Char.DM_Aura, .Char.RM_Aura, .Char.Otra_Aura, _
                                     .Char.Escudo_Aura, .Char.speeding, 0, appear, .Grupo.Lider.ArrayIndex, .GuildIndex, clan_nivel, _
                                     .Stats.MinHp, .Stats.MaxHp, .Stats.MinMAN, .Stats.MaxMAN, 0, False, .flags.Navegando, _
@@ -2315,6 +2324,8 @@ Sub UserDie(ByVal UserIndex As Integer)
                 End If
             End If
             
+            Call CheckDieInsideCastle(UserIndex)
+            
             'Borramos todos los personajes del area
             
             'HarThaoS: Mando un 5 en head para que cuente como muerto el area y no recalcule las posiciones.
@@ -2706,7 +2717,9 @@ Sub WarpUserChar(ByVal UserIndex As Integer, _
                 End If
 
             End If
-    
+
+            Call CheckEnteredCastle(UserIndex)
+
         End With
 
         Exit Sub

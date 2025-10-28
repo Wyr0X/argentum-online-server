@@ -354,6 +354,8 @@ Private Function CheckMapRestrictions(ByVal UserIndex As Integer, ByVal Map As I
                 End If
                 Exit Function
             End If
+            
+            If Not CanEnterCastle(UserIndex, Map) Then Exit Function
 
 160         CheckMapRestrictions = True
 
@@ -1707,6 +1709,12 @@ Sub LookatTile(ByVal UserIndex As Integer, ByVal Map As Integer, ByVal X As Inte
 520             UserList(UserIndex).flags.TargetNpcTipo = e_NPCType.Comun
 522             Call SetUserRef(UserList(userIndex).flags.targetUser, 0)
 
+            End If
+            
+            ' Found Castle
+            If IsCastle(Map, X, Y) Then
+                Call InfoCastle(UserIndex, Map)
+                FoundSomething = 1
             End If
     
             '*** NO ENCONTRO NADA ***
